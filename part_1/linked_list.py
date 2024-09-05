@@ -97,14 +97,12 @@ class LinkedList:
 
         return None, None
 
-
-'''
-
 def symmetric_sum(list1: LinkedList, list2: LinkedList):
     if list1.len() == list2.len():
         return [num1.value + num2.value for num1, num2 in zip(list1, list2)]
     return []
 
+'''
 import unittest
 
 # *
