@@ -198,21 +198,21 @@ class TestSymmetricSumFunc(unittest.TestCase):
         ll2 = LinkedList.from_args(1, 2, 3, 4, 5)
 
         result = symmetric_sum(ll1, ll2)
-        self.assertEqual(result, [2, 4, 6, 8, 10])
+        self.assertEqual(to_values(result), [2, 4, 6, 8, 10])
 
     def test_sum_for_non_equality_range(self):
         ll1 = LinkedList.from_args(1, 2, 3, 4, 5)
         ll2 = LinkedList.from_args(1, 2, 3)
 
         result = symmetric_sum(ll1, ll2)
-        self.assertEqual(result, [])
+        self.assertEqual(to_values(result), [])
 
     def test_sum_for_empty_range(self):
         ll1 = LinkedList.from_args()
         ll2 = LinkedList.from_args()
 
         result = symmetric_sum(ll1, ll2)
-        self.assertEqual(result, [])
+        self.assertEqual(to_values(result), [])
 
 
 class TestBehaviour(unittest.TestCase):

@@ -97,7 +97,10 @@ class LinkedList:
 
         return None, None
 
-def symmetric_sum(list1: LinkedList, list2: LinkedList):
+def symmetric_sum(list1: LinkedList, list2: LinkedList) -> LinkedList:
+    result = LinkedList()
     if list1.len() == list2.len():
-        return [num1.value + num2.value for num1, num2 in zip(list1, list2)]
-    return []
+        for node1, node2 in zip(list1, list2):
+            result.add_in_tail(Node(node1.value + node2.value))
+
+    return result
