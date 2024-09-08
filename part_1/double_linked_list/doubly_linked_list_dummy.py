@@ -45,7 +45,17 @@ class LinkedListDummy:
         return len([i for i in self])
 
     def insert(self, afterNode, newNode):
-        pass
+        if self.dummy.next is None:
+            self.add_in_head(newNode)
+            return
+
+        if afterNode is None or afterNode == self.dummy.prev:
+            self.add_in_tail(newNode)
+            return
+
+        newNode.prev = afterNode
+        newNode.next = afterNode.next
+        afterNode.next = newNode
 
     def add_in_head(self, node: Node):
         node.next = self.dummy.next

@@ -154,69 +154,69 @@ class TestDeleteMethod(unittest.TestCase):
         self.assertEqual(ll15.len(), 1)
 
 
-# class TestAddInHeadMethod(unittest.TestCase):
-#     def test_add_in_head(self):
-#         ll1 = LinkedList.make()
-#         ll1.add_in_head(Node(1))
-#         self.assertEqual(to_values(ll1), [1])
-#
-#         ll2 = LinkedList.make(2, 3, 4, 5)
-#         ll2.add_in_head(Node(1))
-#         self.assertEqual(to_values(ll2), [1, 2, 3, 4, 5])
-#
-#         ll3 = LinkedList.make()
-#         for val in [1, 2, 3, 4, 5]:
-#             ll3.add_in_head(Node(val))
-#         self.assertEqual(to_values(ll3), [5, 4, 3, 2, 1])
-#
-#
-# class TestInsertMethod(unittest.TestCase):
-#     def test_insert(self):
-#         ll1 = LinkedList.make()
-#         ll1.insert(None, Node(1))
-#         self.assertEqual(to_values(ll1), [1])
-#         self.assertEqual(ll1.len(), 1)
-#
-#         ll2 = LinkedList.make(1)
-#         ll2.insert(None, Node(2))
-#         self.assertEqual(to_values(ll2), [1, 2])
-#         self.assertEqual(ll2.len(), 2)
-#
-#         ll3 = LinkedList.make(1, 3, 4, 5)
-#         after_node = ll3.head
-#         ll3.insert(after_node, Node(2))
-#         self.assertEqual(to_values(ll3), [1, 2, 3, 4, 5])
-#         self.assertEqual(ll3.len(), 5)
-#
-#         ll4 = LinkedList.make(1, 2, 3, 4, 5)
-#         after_node = ll4.tail
-#         ll4.insert(after_node, Node(6))
-#         self.assertEqual(to_values(ll4), [1, 2, 3, 4, 5, 6])
-#         self.assertEqual(ll4.len(), 6)
-#
-#         ll5 = LinkedList.make(1, 2, 4, 5)
-#         after_node = ll5.find(2)
-#         ll5.insert(after_node, Node(3))
-#         self.assertEqual(to_values(ll5), [1, 2, 3, 4, 5])
-#         self.assertEqual(ll5.len(), 5)
-#
-#         ll6 = LinkedList.make()
-#         for val in [1, 2, 3, 4, 5]:
-#             ll6.insert(None, Node(val))
-#         self.assertEqual(to_values(ll6), [1, 2, 3, 4, 5])
-#         self.assertEqual(ll6.len(), 5)
-#
-#         ll7 = LinkedList.make(1, 2, 3, 4, 5)
-#         for val in [1, 2, 3, 4, 5]:
-#             ll7.insert(ll7.head, Node(val))
-#         self.assertEqual(to_values(ll7), [1, 5, 4, 3, 2, 1, 2, 3, 4, 5])
-#         self.assertEqual(ll7.len(), 10)
-#
-#         ll8 = LinkedList.make(1, 2, 3, 4, 5)
-#         for val in [1, 2, 3, 4, 5]:
-#             ll8.insert(ll8.tail, Node(val))
-#         self.assertEqual(to_values(ll8), [1, 2, 3, 4, 5, 1, 2, 3, 4, 5])
-#         self.assertEqual(ll8.len(), 10)
+class TestAddInHeadMethod(unittest.TestCase):
+    def test_add_in_head(self):
+        ll1 = LinkedList.make()
+        ll1.add_in_head(Node(1))
+        self.assertEqual(to_values(ll1), [1])
+
+        ll2 = LinkedList.make(2, 3, 4, 5)
+        ll2.add_in_head(Node(1))
+        self.assertEqual(to_values(ll2), [1, 2, 3, 4, 5])
+
+        ll3 = LinkedList.make()
+        for val in [1, 2, 3, 4, 5]:
+            ll3.add_in_head(Node(val))
+        self.assertEqual(to_values(ll3), [5, 4, 3, 2, 1])
+
+
+class TestInsertMethod(unittest.TestCase):
+    def test_insert(self):
+        ll1 = LinkedList.make()
+        ll1.insert(None, Node(1))
+        self.assertEqual(to_values(ll1), [1])
+        self.assertEqual(ll1.len(), 1)
+
+        ll2 = LinkedList.make(1)
+        ll2.insert(None, Node(2))
+        self.assertEqual(to_values(ll2), [1, 2])
+        self.assertEqual(ll2.len(), 2)
+
+        ll3 = LinkedList.make(1, 3, 4, 5)
+        after_node = ll3.dummy.next
+        ll3.insert(after_node, Node(2))
+        self.assertEqual(to_values(ll3), [1, 2, 3, 4, 5])
+        self.assertEqual(ll3.len(), 5)
+
+        ll4 = LinkedList.make(1, 2, 3, 4, 5)
+        after_node = ll4.dummy.prev
+        ll4.insert(after_node, Node(6))
+        self.assertEqual(to_values(ll4), [1, 2, 3, 4, 5, 6])
+        self.assertEqual(ll4.len(), 6)
+
+        ll5 = LinkedList.make(1, 2, 4, 5)
+        after_node = ll5.find(2)
+        ll5.insert(after_node, Node(3))
+        self.assertEqual(to_values(ll5), [1, 2, 3, 4, 5])
+        self.assertEqual(ll5.len(), 5)
+
+        ll6 = LinkedList.make()
+        for val in [1, 2, 3, 4, 5]:
+            ll6.insert(None, Node(val))
+        self.assertEqual(to_values(ll6), [1, 2, 3, 4, 5])
+        self.assertEqual(ll6.len(), 5)
+
+        ll7 = LinkedList.make(1, 2, 3, 4, 5)
+        for val in [1, 2, 3, 4, 5]:
+            ll7.insert(ll7.dummy.next, Node(val))
+        self.assertEqual(to_values(ll7), [1, 5, 4, 3, 2, 1, 2, 3, 4, 5])
+        self.assertEqual(ll7.len(), 10)
+
+        ll8 = LinkedList.make(1, 2, 3, 4, 5)
+        for val in [1, 2, 3, 4, 5]:
+            ll8.insert(ll8.dummy.prev, Node(val))
+        self.assertEqual(to_values(ll8), [1, 2, 3, 4, 5, 1, 2, 3, 4, 5])
+        self.assertEqual(ll8.len(), 10)
 
 
 if __name__ == '__main__':
