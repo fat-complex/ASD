@@ -1,15 +1,8 @@
-class Node:
-    def __init__(self, v):
-        self.value = v
-        self.prev = None
-        self.next = None
+from doubly_linked_list import *
 
-    def __repr__(self):
-        return "{}".format(self.value)
-
-
-class LinkedListDummy:
+class LinkedListDummy(LinkedList2):
     def __init__(self):
+        super().__init__()
         self.dummy: Node = Node(None)
         self.reset()
 
@@ -19,15 +12,6 @@ class LinkedListDummy:
         node.next = self.dummy
         self.dummy.prev = node
 
-
-    def find(self, val):
-        for node in self:
-            if node.value == val:
-                return node
-        return None
-
-    def find_all(self, val) -> [Node]:
-        return [node for node in self if node.value == val]
 
     def delete(self, val, all=False):
         nodes: [Node] = self.find_all(val)
@@ -40,9 +24,6 @@ class LinkedListDummy:
 
     def clean(self):
         self.reset()
-
-    def len(self):
-        return len([i for i in self])
 
     def insert(self, afterNode, newNode):
         if self.dummy.next is None:
@@ -82,8 +63,5 @@ class LinkedListDummy:
         while cursor != self.dummy:
             yield cursor
             cursor = cursor.next
-
-    def __repr__(self):
-        return str([node for node in self])
 
 
