@@ -29,7 +29,7 @@ class DynArrayBanked:
     def resize(self):
         new_capacity = int(math.pow(self.bank_coins, 2))
         self.capacity = new_capacity if self.capacity < new_capacity else self.capacity
-        self.bank_coins -= math.log(self.capacity, 2)
+        self.bank_coins -= self.capacity // 2
 
         new_array = self.make_array(self.capacity)
         for i in range(self.count):
