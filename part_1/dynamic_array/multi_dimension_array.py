@@ -19,6 +19,8 @@ class MultiDimensionArray(DynArray):
 
 class TestMultiDimension(unittest.TestCase):
     def test_add_elem(self):
+
+        # three-dimensional array
         arr = MultiDimensionArray.make(*[[[1], [2], [3]],  # row 0
                                          [[4], [5], [6]]]) # row 1
         arr[1][1].append(23)
