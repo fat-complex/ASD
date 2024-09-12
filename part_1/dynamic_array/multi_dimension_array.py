@@ -15,6 +15,7 @@ class MultiDimensionArray(DynArray):
                 arr.append(arg)
         return arr
 
-arr = MultiDimensionArray.make(*[[[1], [2], [3]], [[4], [5], [6]]])
+arr = MultiDimensionArray.make(*[[[1], [2], [3]],
+                                 [[4], [5], [6]]])
 
 arr[1][1].append(23)
