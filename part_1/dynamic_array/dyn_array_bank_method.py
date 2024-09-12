@@ -1,12 +1,19 @@
 import ctypes
+import math
 
-class DynArray:
+
+class DynArrayBanked:
 
     def __init__(self):
         self.count = 0
-        self.capacity = 16
-        self.array = self.make_array(self.capacity)
         self.min_capacity = 16
+        self.capacity = self.min_capacity
+        self.array = self.make_array(self.capacity)
+        self.copy_coast = 3
+        self.insert_coast = 3
+        self.remove_coast = -2
+        self.resize_coast = self.capacity
+        self.bank_coins  = 0
 
     def __len__(self):
         return self.count
@@ -19,27 +26,26 @@ class DynArray:
             raise IndexError('Index is out of bounds')
         return self.array[i]
 
-    def resize(self, new_capacity):
-        new_array = self.make_array(new_capacity)
+    def resize(self):
+        new_capacity = int(math.pow(self.bank_coins, 2))
+        self.capacity = new_capacity if self.capacity < new_capacity else self.capacity
+        self.bank_coins -= math.log(self.capacity, 2)
+
+        new_array = self.make_array(self.capacity)
         for i in range(self.count):
             new_array[i] = self.array[i]
+            self.bank_coins -= self.copy_coast
         self.array = new_array
-        self.capacity = new_capacity
 
     def append(self, itm):
-        if self.count == self.capacity:
-            self.resize(2 * self.capacity)
-        self.array[self.count] = itm
-        self.count += 1
+        self.insert(len(self), itm)
 
     def insert(self, i, itm):
         if i < 0 or i > self.count:
             raise IndexError('Index is out of bounds')
-        if i == self.count:
-            self.append(itm)
-            return
-        if self.count == self.capacity:
-            self.resize(2 * self.capacity)
+        self.bank_coins += self.insert_coast
+        if self.count >= self.capacity:
+            self.resize()
         for idx in range(self.count, i, -1):
             self.array[idx] = self.array[idx - 1]
         self.array[i] = itm
@@ -48,16 +54,13 @@ class DynArray:
     def delete(self, i):
         if i < 0 or i >= self.count:
             raise IndexError('Index is out of bounds')
+        self.bank_coins -= self.remove_coast
         for idx in range(i, self.count - 1):
             self.array[idx] = self.array[idx + 1]
         self.count -= 1
         percentage_loading = int(100 * self.count / self.capacity)
         if percentage_loading < 50:
-            new_size = int(self.capacity / 1.5)
-            if new_size < self.min_capacity:
-                self.resize(self.min_capacity)
-            else:
-                self.resize(new_size)
+            self.resize()
 
 
     def __iter__(self):
@@ -68,15 +71,7 @@ class DynArray:
 
     @staticmethod
     def make(*args):
-        arr: DynArray = DynArray()
+        arr: DynArrayBanked = DynArrayBanked()
         for arg in args:
             arr.append(arg)
         return arr
-
-# 5.3 Complexity: insert: 1) resize: ~O(1) allocating + O(N) copy element from source array to dest
-#                         2) shift = (count - i) shifts ~ O(N)
-#                         total = O(1) + O(N) + O(N) = O(N)
-#
-#             delete: 1) shift = (count - i) shifts ~ O(N)
-#                     2) resize: ~O(1) allocating + O(N) copy element from source array to dest
-#                     3) total = O(1) + O(N) + O(N) = O(N)
