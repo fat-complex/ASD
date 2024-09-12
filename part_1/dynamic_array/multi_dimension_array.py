@@ -40,6 +40,3 @@ class TestMultiDimension(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
-arr = MultiDimensionArray.make(*[[[1], [2], [3]],
-                                 [[4], [5], [6]]])
-
