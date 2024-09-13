@@ -1,6 +1,5 @@
-from cgitb import reset
+from part_1.double_linked_list.doubly_linked_list import Node
 
-from doubly_linked_list import *
 
 class Dummy(Node):
     def __init__(self):
@@ -80,6 +79,7 @@ class CircularLinkedList:
     def __init__(self):
         self.dummy: Node = Dummy()
         self.reset()
+        self.size = 0
 
     def find(self, val):
         for node in self:
@@ -91,45 +91,41 @@ class CircularLinkedList:
         return [node for node in self if node.value == val]
 
     def len(self):
-        return len([i for i in self])
+        return self.size
 
     def add_in_tail(self, node: Node):
-        node.prev = self.dummy.prev
-        node.prev.next = node
-        node.next = self.dummy
-        self.dummy.prev = node
+        self.insert(self.end(), node)
 
+    def remove(self, node: Node):
+        node.prev.next = node.next
+        node.next.prev = node.prev
+        self.size -= 1
 
     def delete(self, val, all=False):
         nodes: [Node] = self.find_all(val)
         for node in nodes:
-            node.prev.next = node.next
-            node.next.prev = node.prev
-
+            self.remove(node)
             if all is False:
                 break
 
     def clean(self):
         self.reset()
 
-    def insert(self, afterNode, newNode):
-        if self.dummy.next is None:
-            self.add_in_head(newNode)
-            return
+    def insert(self, at_before_node: Node, node: Node):
+        node.next = at_before_node
+        node.prev = at_before_node.prev
+        node.prev.next = node
+        node.next.prev = node
+        self.size += 1
 
-        if afterNode is None or afterNode == self.dummy.prev:
-            self.add_in_tail(newNode)
-            return
+    def begin(self):
+        return self.dummy.next
 
-        newNode.prev = afterNode
-        newNode.next = afterNode.next
-        afterNode.next = newNode
+    def end(self):
+        return self.dummy
 
     def add_in_head(self, node: Node):
-        node.next = self.dummy.next
-        self.dummy.next.prev = node
-        self.dummy.next = node
-        node.prev = self.dummy
+        self.insert(self.begin(), node)
 
     def reset(self):
         self.dummy.next = None
@@ -137,6 +133,26 @@ class CircularLinkedList:
 
         self.dummy.next = self.dummy
         self.dummy.prev = self.dummy
+
+    def top_value(self):
+        if self.len() > 0:
+            return self.dummy.next.value
+        return None
+
+    def back_value(self):
+        if self.len() > 0:
+            return self.dummy.prev.value
+        return None
+
+    def pop_front(self):
+        head = self.dummy.next
+        if head is not None:
+            self.remove(head)
+
+    def pop_back(self):
+        tail = self.dummy.prev
+        if tail is not None:
+            self.remove(tail)
 
     @staticmethod
     def make(*args):

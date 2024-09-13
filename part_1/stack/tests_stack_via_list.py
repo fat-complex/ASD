@@ -1,9 +1,10 @@
 import unittest
-from stack import Stack
+
+from stack_via_list import StackList
 
 class TestInsertMethod(unittest.TestCase):
     def test_push(self):
-        stack = Stack()
+        stack = StackList()
         stack.push(1)
         self.assertEqual(stack.size(), 1)
         self.assertEqual(stack.peek(), 1)
@@ -17,8 +18,9 @@ class TestInsertMethod(unittest.TestCase):
         self.assertEqual(stack.size(), 5)
         self.assertEqual(stack.peek(), 5)
 
+class TestPopMethod(unittest.TestCase):
     def test_pop(self):
-        stack = Stack()
+        stack = StackList()
         top = stack.pop()
         self.assertEqual(top, None)
         self.assertEqual(stack.size(), 0)
@@ -42,6 +44,41 @@ class TestInsertMethod(unittest.TestCase):
         self.assertEqual(stack.size(), 0)
         self.assertEqual(stack.peek(), None)
 
+
+class TestGetMinMethod(unittest.TestCase):
+    def test_get_min_value(self):
+        stack = StackList()
+
+        min_val = stack.get_min_value()
+        self.assertEqual(min_val, None)
+
+        stack.push(1)
+        min_val = stack.get_min_value()
+        self.assertEqual(min_val, 1)
+
+        for val in range(2, 6):
+            stack.push(val)
+        min_val = stack.get_min_value()
+        self.assertEqual(min_val, 1)
+        self.assertEqual(stack.peek(), 5)
+
+        stack.pop()
+        min_val = stack.get_min_value()
+        self.assertEqual(min_val, 1)
+        self.assertEqual(stack.peek(), 4)
+
+
+class TestGetAverageMethod(unittest.TestCase):
+    def test_get_average(self):
+        stack = StackList()
+        self.assertEqual(stack.get_average(), None)
+
+        for val in range(1, 6):
+            stack.push(val)
+        self.assertEqual(stack.get_average(), 3)
+
+        stack.pop()
+        self.assertEqual(stack.get_average(), 2)
 
 if __name__ == '__main__':
     unittest.main()
