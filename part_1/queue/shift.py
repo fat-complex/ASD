@@ -11,7 +11,7 @@ def shift(target: Queue, shifts: int) -> Queue:
 
 import unittest
 
-class TestShiftMethod(unittest.TestCase):
+class TestShiftFunction(unittest.TestCase):
     def test_shift_1(self):
         queue = Queue()
         for val in range(1, 6):
