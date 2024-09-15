@@ -17,3 +17,8 @@ class Stack:
         if self.size() > 0:
             return self.stack[self.size() - 1]
         return None
+
+    def bottom(self):
+        if self.size() > 0:
+            return self.stack[0]
+        return None
