@@ -134,6 +134,9 @@ class CircularLinkedList:
         self.dummy.next = self.dummy
         self.dummy.prev = self.dummy
 
+    def is_empty(self):
+        return self.size == 0
+
     def top_value(self):
         if self.len() > 0:
             return self.dummy.next.value
