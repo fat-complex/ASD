@@ -1,7 +1,7 @@
 import unittest
 
-from part_1.deque.deque import Deque, DequeWithMinSupport
-
+from part_1.deque.deque import Deque
+from part_1.deque.deque_with_min_support import DequeWithMinSupport
 
 class TestAddFrontMethod(unittest.TestCase):
     def test_add_front(self):
@@ -60,7 +60,7 @@ class TestAddFrontAndTailMethod(unittest.TestCase):
         self.assertEqual(deque.size(), 4)
 
 
-class TestRemoveFrontlMethod(unittest.TestCase):
+class TestRemoveFrontMethod(unittest.TestCase):
     def test_remove_front(self):
         deque = Deque()
         self.assertEqual(deque.removeFront(), None)
