@@ -2,82 +2,64 @@ import unittest
 
 from part_1.deque.deque import Deque
 
-# class BracketsValidator:
-#     def __init__(self):
-#         self.
-
-def is_balanced(tokens: str) -> bool:
-    deque = Deque()
-    for token in tokens:
-        if is_open_bracket(token):
-            deque.addFront(token)
-        elif is_close_bracket(token):
-            deque.removeFront() if token == map_to_close_bracket(deque.top_value()) else deque.addFront(token)
-    return deque.size() == 0
-
-def is_open_bracket(token: str) -> bool:
-    match token:
-        case "(": return True
-        case "{": return True
-        case "[": return True
-    return False
+class ParenthesisValidator:
+    def __init__(self):
+        self.open_parenthesis = {"(", "{", "["}
+        self.close_parenthesis = {")", "}", "]"}
+        self.parenthesis_mapper = {"(": ")", "[": "]", "{": "}"}
 
 
-def is_close_bracket(token: str) -> bool:
-    match token:
-        case ")": return True
-        case "}": return True
-        case "]": return True
-    return False
+    def validate_expression(self, expr: str) -> bool:
+        deque = Deque()
+        for token in expr:
+            if token in self.open_parenthesis:
+                deque.addFront(token)
+            elif token in self.close_parenthesis and not deque.is_empty():
+                deque.removeFront() if token == self.parenthesis_mapper.get(deque.top_value()) else deque.addFront(token)
+        return deque.size() == 0
 
-
-def map_to_close_bracket(token: str) -> str:
-    match token:
-        case "(": return ")"
-        case "{": return "}"
-        case "[": return "]"
-    return ""
 
 class TestIsValidBrackets(unittest.TestCase):
     def test_suite(self):
+        parenthesis_validator = ParenthesisValidator()
         target = "((1 + 2) * ((3 + 4) - (6 - 5)) * 4)"
-        self.assertTrue(is_balanced(target))
+        self.assertTrue(parenthesis_validator.validate_expression(target))
 
         target = "((x - 1) * (x - 2) * ((x + 1)"
-        self.assertFalse(is_balanced(target))
+        self.assertFalse(parenthesis_validator.validate_expression(target))
 
         target = "(1"
-        self.assertFalse(is_balanced(target))
+        self.assertFalse(parenthesis_validator.validate_expression(target))
 
         target = ""
-        self.assertTrue(is_balanced(target))
+        self.assertTrue(parenthesis_validator.validate_expression(target))
 
         target = "1 + 2"
-        self.assertTrue(is_balanced(target))
+        self.assertTrue(parenthesis_validator.validate_expression(target))
 
         target = "())("
-        self.assertFalse(is_balanced(target))
+        self.assertFalse(parenthesis_validator.validate_expression(target))
 
         target = "))(("
-        self.assertFalse(is_balanced(target))
+        self.assertFalse(parenthesis_validator.validate_expression(target))
 
         target = "((())"
-        self.assertFalse(is_balanced(target))
+        self.assertFalse(parenthesis_validator.validate_expression(target))
 
         target = "array[]"
-        self.assertTrue(is_balanced(target))
+        self.assertTrue(parenthesis_validator.validate_expression(target))
 
         target = "()"
-        self.assertTrue(is_balanced(target))
+        self.assertTrue(parenthesis_validator.validate_expression(target))
 
         target = "if (x == 1) {}"
-        self.assertTrue(is_balanced(target))
+        self.assertTrue(parenthesis_validator.validate_expression(target))
 
         target = "{[()]}"
-        self.assertTrue(is_balanced(target))
+        self.assertTrue(parenthesis_validator.validate_expression(target))
 
         target = "if (x == 1) { array[idx()] = 23}"
-        self.assertTrue(is_balanced(target))
+        self.assertTrue(parenthesis_validator.validate_expression(target))
 
 if __name__ == '__main__':
     unittest.main()
