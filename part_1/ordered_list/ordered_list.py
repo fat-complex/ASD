@@ -1,3 +1,7 @@
+from itertools import count
+from os import pread
+
+
 class Node:
     def __init__(self, v):
         self.value = v
@@ -26,23 +30,12 @@ class OrderedList:
         self.__insert(place, Node(value))
 
     def find(self, val):
-        for node in self:
-            if  self.compare(node.value, val) == 0:
-                return node
-        return None
+        result, _ = self.__find_if(self.head, lambda x: self.compare(x, val) == 0)
+        return result
 
     def delete(self, val):
         found = self.find(val)
-        if found is not None:
-            if found.prev is not None:
-                found.prev.next = found.next
-            else:
-                self.head = found.next
-            if found.next is not None:
-                found.next.prev = found.prev
-
-            self.tail = found.prev if found == self.tail else self.tail
-            self.size -= 1
+        self.__delete(found)
 
     def clean(self, asc):
         self.__ascending = asc
@@ -63,7 +56,82 @@ class OrderedList:
     def empty(self):
         return self.len() == 0
 
-    def end(self):
+    def remove_duplicates(self):
+        node: Node = self.head
+        while node is not None:
+            next_node, _ = self.__find_if(node, lambda x: x != node.value)
+            self.__delete_range(node.next, next_node)
+            node = next_node
+
+    def merge(self, other):
+        if self.head == other.head:
+            return
+
+        if self.head is None:
+            self.head = other.head
+            self.tail = other.tail
+            return
+        if other.head is None:
+            return
+
+        node1 = self.head
+        node2 = other.head
+
+        head: Node | None
+        tail: Node | None
+        if node1.value < node2.value:
+            head = tail = node1
+            node1 = node1.next
+        else:
+            head = tail = node2
+            node2 = node2.next
+
+        while node1 is not None and node2 is not None:
+            if node1.value < node2.value:
+                tail.next = node1
+                node1.prev = tail
+                tail = node1
+                node1 = node1.next
+            else:
+                tail.next = node2
+                node2.prev = tail
+                tail = node2
+                node2 = node2.next
+
+        tail.next = node1 if node1 is not None else node2
+        tail.next.prev = tail
+        while tail.next:
+            tail = tail.next
+        self.head = head
+        self.tail = tail
+
+    def range_contains(self, lst: []) -> bool:
+        if len(lst) == 0:
+            return True
+        start = self.find(lst[0])
+        if start is None:
+            return False
+
+        start = start.next
+        for val in lst[1:]:
+            if start is None or start.value != val:
+                return False
+            start = start.next
+
+        return True
+
+    def most_common(self):
+        result = self.head.value if self.head is not None else None
+        count = 1
+        node: Node = self.head
+        while node is not None:
+            next_node, distance = self.__find_if(node, lambda x: x != node.value)
+            result = node.value if distance > count else result
+            count = distance
+            node = next_node
+        return result
+
+    def __end(self):
         return self.tail if self.tail is None else self.tail.next
 
     def __iter__(self):
@@ -118,7 +186,35 @@ class OrderedList:
         for node in self:
             if comparator(value, node.value):
                 return node
-        return self.end()
+        return self.__end()
+
+    def __delete(self, node: Node):
+        if node is not None:
+            if node.prev is not None:
+                node.prev.next = node.next
+            else:
+                self.head = node.next
+            if node.next is not None:
+                node.next.prev = node.prev
+
+            self.tail = node.prev if node == self.tail else self.tail
+            self.size -= 1
+
+    def __delete_range(self, first: Node, last: Node):
+        while first != last:
+            next_node = first.next
+            self.__delete(first)
+            first = next_node
+
+    def __find_if(self, from_pos: Node, predicate):
+        distance = 0
+        node: Node = from_pos
+        while node is not None:
+            if predicate(node.value):
+                return node, distance
+            node = node.next
+            distance += 1
+        return self.__end(), distance
 
     @staticmethod
     def make(asc: bool, *args):

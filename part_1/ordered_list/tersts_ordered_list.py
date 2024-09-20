@@ -130,5 +130,80 @@ class TestDeleteMethod(unittest.TestCase):
         self.assertEqual(to_values(ordered), [4, 2, 1])
         self.assertEqual(ordered.size, 3)
 
+
+class TestRemoveDuplicateMethod(unittest.TestCase):
+    def test_remove_duplicate(self):
+        ordered = OrderedList.make(True, 1, 1, 2, 3, 3, 3, 4, 5, 5)
+        ordered.remove_duplicates()
+        self.assertEqual(to_values(ordered), [1, 2, 3, 4, 5])
+        self.assertEqual(ordered.size, 5)
+
+        ordered = OrderedList.make(True, 1, 1, 1, 1, 1)
+        ordered.remove_duplicates()
+        self.assertEqual(to_values(ordered), [1])
+        self.assertEqual(ordered.size, 1)
+
+
+class TestMergeMethod(unittest.TestCase):
+    def test_emplace_merge(self):
+        ll1 = OrderedList.make(True)
+        ll2 = OrderedList.make(True,1, 2)
+        ll1.merge(ll2)
+        self.assertEqual(to_values(ll1), [1, 2])
+
+        ll1 = OrderedList.make(True,1, 2)
+        ll2 = OrderedList.make(True)
+        ll1.merge(ll2)
+        self.assertEqual(to_values(ll1), [1, 2])
+
+        ll1 = OrderedList.make(True, 1, 2, 3)
+        ll2 = OrderedList.make(True, 4, 5, 6)
+        ll1.merge(ll2)
+        self.assertEqual(to_values(ll1), [1, 2, 3, 4, 5, 6])
+
+        ll1 = OrderedList.make(True, 1, 3, 6)
+        ll2 = OrderedList.make(True, 2, 4, 5)
+        ll1.merge(ll2)
+        self.assertEqual(to_values(ll1), [1, 2, 3, 4, 5, 6])
+
+
+class TestRangeContainsMethod(unittest.TestCase):
+    def test_range_contains(self):
+        ordered = OrderedList.make(True, 1, 2, 3, 4, 5)
+
+        self.assertTrue(ordered.range_contains([1]))
+        self.assertTrue(ordered.range_contains([1, 2]))
+        self.assertTrue(ordered.range_contains([1, 2, 3]))
+        self.assertTrue(ordered.range_contains([1, 2, 3, 4]))
+        self.assertTrue(ordered.range_contains([1, 2, 3, 4, 5]))
+
+        self.assertTrue(ordered.range_contains([5]))
+        self.assertTrue(ordered.range_contains([4, 5]))
+        self.assertTrue(ordered.range_contains([3, 4, 5]))
+        self.assertTrue(ordered.range_contains([2, 3, 4, 5]))
+
+        self.assertFalse(ordered.range_contains([1, 2, 3, 4, 5, 6]))
+        self.assertFalse(ordered.range_contains([1, 2, 3, 7]))
+        self.assertFalse(ordered.range_contains([7, 1, 2, 3]))
+
+
+class TestMostCommonMethod(unittest.TestCase):
+    def test_most_common(self):
+        ordered = OrderedList.make(True)
+        self.assertEqual(ordered.most_common(), None)
+
+        ordered = OrderedList.make(True, 1)
+        self.assertEqual(ordered.most_common(), 1)
+
+        ordered = OrderedList.make(True, 1, 2, 2, 2, 4, 5)
+        self.assertEqual(ordered.most_common(), 2)
+
+        ordered = OrderedList.make(True, 1, 2, 3, 4, 5)
+        self.assertEqual(ordered.most_common(), 1)
+        self.assertNotEqual(ordered.most_common(), 2)
+        self.assertNotEqual(ordered.most_common(), 3)
+        self.assertNotEqual(ordered.most_common(), 4)
+        self.assertNotEqual(ordered.most_common(), 5)
+
 if __name__ == '__main__':
     unittest.main()
