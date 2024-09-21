@@ -147,15 +147,17 @@ class OrderedList:
             return -1
         start = self.head
         end = self.tail
+        if not self.__ascending:
+            start, end = end, start
 
         while start != end:
             mid = self.__get_mid_node(start, end)
             if mid.value.elem == value:
                 return mid.value.index
             if value < mid.value.elem:
-                end = mid.prev
+                end = mid.prev if self.__ascending else mid.next
             else:
-                start = mid.next
+                start = mid.next if self.__ascending else mid.prev
         return start.value.index if start.value.elem == value else -1
 
     def __end(self):

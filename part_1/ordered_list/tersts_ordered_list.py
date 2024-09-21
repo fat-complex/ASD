@@ -233,5 +233,15 @@ class TestFindIndexByValueMethod(unittest.TestCase):
         self.assertEqual(ordered.find_index_by_value(6), 5)
         self.assertEqual(ordered.find_index_by_value(10), -1)
 
+        ordered = OrderedList.make(False, 6, 5, 4, 3, 2, 1)
+
+        self.assertEqual(ordered.find_index_by_value(1), 5)
+        self.assertEqual(ordered.find_index_by_value(2), 4)
+        self.assertEqual(ordered.find_index_by_value(3), 3)
+        self.assertEqual(ordered.find_index_by_value(4), 2)
+        self.assertEqual(ordered.find_index_by_value(5), 1)
+        self.assertEqual(ordered.find_index_by_value(6), 0)
+        self.assertEqual(ordered.find_index_by_value(10), -1)
+
 if __name__ == '__main__':
     unittest.main()
