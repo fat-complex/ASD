@@ -1,9 +1,9 @@
 import unittest
 
-from part_1.ordered_list.ordered_list import OrderedList, Node
+from part_1.ordered_list.ordered_list import *
 
 def to_values(list_nodes: [Node | None]):
-    return [node.value for node in list_nodes]
+    return [node.value.elem for node in list_nodes]
 
 class TestAddMethod(unittest.TestCase):
     def test_add_ascending(self):
@@ -204,6 +204,34 @@ class TestMostCommonMethod(unittest.TestCase):
         self.assertNotEqual(ordered.most_common(), 3)
         self.assertNotEqual(ordered.most_common(), 4)
         self.assertNotEqual(ordered.most_common(), 5)
+
+
+class TestFindIndexByValueMethod(unittest.TestCase):
+    def test_most_common(self):
+        ordered = OrderedList.make(True)
+        self.assertEqual(ordered.find_index_by_value(1), -1)
+
+        ordered.add(1)
+        self.assertEqual(ordered.find_index_by_value(1), 0)
+
+        ordered = OrderedList.make(True, 1, 2, 3, 4, 5)
+
+        self.assertEqual(ordered.find_index_by_value(1), 0)
+        self.assertEqual(ordered.find_index_by_value(2), 1)
+        self.assertEqual(ordered.find_index_by_value(3), 2)
+        self.assertEqual(ordered.find_index_by_value(4), 3)
+        self.assertEqual(ordered.find_index_by_value(5), 4)
+        self.assertEqual(ordered.find_index_by_value(10), -1)
+
+        ordered = OrderedList.make(True, 1, 2, 3, 4, 5, 6)
+
+        self.assertEqual(ordered.find_index_by_value(1), 0)
+        self.assertEqual(ordered.find_index_by_value(2), 1)
+        self.assertEqual(ordered.find_index_by_value(3), 2)
+        self.assertEqual(ordered.find_index_by_value(4), 3)
+        self.assertEqual(ordered.find_index_by_value(5), 4)
+        self.assertEqual(ordered.find_index_by_value(6), 5)
+        self.assertEqual(ordered.find_index_by_value(10), -1)
 
 if __name__ == '__main__':
     unittest.main()

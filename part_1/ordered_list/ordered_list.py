@@ -1,3 +1,4 @@
+from cgitb import reset
 from itertools import count
 from os import pread
 
@@ -10,6 +11,14 @@ class Node:
 
     def __repr__(self):
         return "{}".format(self.value)
+
+class Item:
+    def __init__(self, value, index):
+        self.elem = value
+        self.index = index
+
+    def __repr__(self):
+        return "([{}], {})".format(self.index, self.elem)
 
 class OrderedList:
     def __init__(self, asc):
@@ -26,11 +35,13 @@ class OrderedList:
         return 1
 
     def add(self, value):
-        place = self.__get_place(value)
-        self.__insert(place, Node(value))
+        place, distance = self.__get_insert_place(value)
+        inserted = self.__insert(place, Node(Item(value, distance)))
+        self.__recalculate_indexes(inserted)
+
 
     def find(self, val):
-        result, _ = self.__find_if(self.head, lambda x: self.compare(x, val) == 0)
+        result, _ = self.__find_if(self.head, self.__end(), lambda x: self.compare(x.elem, val) == 0)
         return result
 
     def delete(self, val):
@@ -59,7 +70,7 @@ class OrderedList:
     def remove_duplicates(self):
         node: Node = self.head
         while node is not None:
-            next_node, _ = self.__find_if(node, lambda x: x != node.value)
+            next_node, _ = self.__find_if(node, self.__end(), lambda x: x.elem != node.value.elem)
             self.__delete_range(node.next, next_node)
             node = next_node
 
@@ -79,7 +90,7 @@ class OrderedList:
 
         head: Node | None
         tail: Node | None
-        if node1.value < node2.value:
+        if node1.value.elem < node2.value.elem:
             head = tail = node1
             node1 = node1.next
         else:
@@ -87,7 +98,7 @@ class OrderedList:
             node2 = node2.next
 
         while node1 is not None and node2 is not None:
-            if node1.value < node2.value:
+            if node1.value.elem < node2.value.elem:
                 tail.next = node1
                 node1.prev = tail
                 tail = node1
@@ -114,7 +125,7 @@ class OrderedList:
 
         start = start.next
         for val in lst[1:]:
-            if start is None or start.value != val:
+            if start is None or start.value.elem != val:
                 return False
             start = start.next
 
@@ -122,14 +133,30 @@ class OrderedList:
 
     def most_common(self):
         result = self.head.value if self.head is not None else None
-        count = 1
+        current_count = 1
         node: Node = self.head
         while node is not None:
-            next_node, distance = self.__find_if(node, lambda x: x != node.value)
-            result = node.value if distance > count else result
-            count = distance
+            next_node, distance = self.__find_if(node, self.__end(), lambda x: x.elem != node.value.elem)
+            result = node.value if distance > current_count else result
+            current_count = distance
             node = next_node
-        return result
+        return result.elem if result is not None else result
+
+    def find_index_by_value(self, value):
+        if self.empty():
+            return -1
+        start = self.head
+        end = self.tail
+
+        while start != end:
+            mid = self.__get_mid_node(start, end)
+            if mid.value.elem == value:
+                return mid.value.index
+            if value < mid.value.elem:
+                end = mid.prev
+            else:
+                start = mid.next
+        return start.value.index if start.value.elem == value else -1
 
     def __end(self):
         return self.tail if self.tail is None else self.tail.next
@@ -141,20 +168,21 @@ class OrderedList:
             yield cursor
             cursor = cursor.next
 
-    def __insert(self, at_before: Node, node: Node):
+    def __insert(self, at_before: Node, node: Node) -> Node | None:
         if self.empty() or at_before is None:
             self.__add_in_tail(node)
-            return
+            return self.tail
 
         if at_before.prev is None:
             self.__add_in_head(node)
-            return
+            return self.head
 
         node.next = at_before
         node.prev = at_before.prev
         node.prev.next = node
         node.next.prev = node
         self.size += 1
+        return node
 
     def __add_in_tail(self, node: Node):
         if self.head is None:
@@ -177,16 +205,10 @@ class OrderedList:
         newNode.prev = None
         self.size += 1
 
-    def __get_place(self, value):
+    def __get_insert_place(self, value) -> (Node | None, int):
         if self.__ascending:
-            return self.__find_insert_place(value, lambda l, r: self.compare(l, r) == -1)
-        return self.__find_insert_place(value, lambda l, r: self.compare(l, r) == +1)
-
-    def __find_insert_place(self, value, comparator):
-        for node in self:
-            if comparator(value, node.value):
-                return node
-        return self.__end()
+            return self.__find_if(self.head, self.__end(), lambda x: self.compare(value, x.elem) == -1)
+        return self.__find_if(self.head, self.__end(), lambda x: self.compare(value, x.elem) == +1)
 
     def __delete(self, node: Node):
         if node is not None:
@@ -206,15 +228,35 @@ class OrderedList:
             self.__delete(first)
             first = next_node
 
-    def __find_if(self, from_pos: Node, predicate):
+    def __find_if(self, first: Node, last: Node, predicate) -> (Node | None, int):
         distance = 0
-        node: Node = from_pos
-        while node is not None:
+        node: Node = first
+        while node != last:
             if predicate(node.value):
                 return node, distance
             node = node.next
             distance += 1
         return self.__end(), distance
+
+    def __recalculate_indexes(self, from_node: Node):
+        node = from_node.next
+        idx = from_node.value.index + 1
+        while node is not None:
+            node.value.index = idx
+            node = node.next
+            idx += 1
+
+    def __get_mid_node(self, first: Node | None, last: Node | None) -> Node | None:
+        if self.empty():
+            return None
+        if first == last:
+            return first
+        cnt = 0
+        size = last.value.index - first.value.index
+        while first != last and cnt < size // 2:
+            cnt += 1
+            first = first.next
+        return first
 
     @staticmethod
     def make(asc: bool, *args):
