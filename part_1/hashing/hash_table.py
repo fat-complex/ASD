@@ -8,13 +8,7 @@ class HashTable:
         return self.__hash(value) % self.size
 
     def seek_slot(self, value):
-        idx = self.hash_fun(value)
-        if self.slots[idx] is None:
-            return idx
-        for i in range(idx, self.size, self.step):
-            if self.slots[i] is None:
-                return i
-        return None
+        return self.find_insert_pace(value, self.slots)
 
     def put(self, value):
         idx: int | None = self.seek_slot(value)
@@ -28,6 +22,17 @@ class HashTable:
             return idx
         for i in range(idx, self.size, self.step):
             if self.slots[i] == value:
+                return i
+        return None
+
+    def find_insert_pace(self, value: str, table: []):
+        idx = self.hash_fun(value)
+        if table[idx] is None:
+            return idx
+        if table[idx] == value:
+            return None
+        for i in range(idx, self.size, self.step):
+            if table[i] is None:
                 return i
         return None
 
