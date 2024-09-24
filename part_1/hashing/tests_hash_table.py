@@ -1,5 +1,4 @@
 import unittest
-import random
 from itertools import permutations
 
 from part_1.hashing.hash_table import HashTable
