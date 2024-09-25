@@ -1,7 +1,3 @@
-from cgitb import reset
-from itertools import count
-from os import pread
-
 
 class Node:
     def __init__(self, v):
@@ -41,8 +37,12 @@ class OrderedList:
 
 
     def find(self, val):
-        result, _ = self.__find_if(self.head, self.__end(), lambda x: self.compare(x.elem, val) == 0)
-        return result
+        result: Node | None
+        if self.__ascending:
+            result, _ = self.lower_bound(self.head, self.__end(), lambda x: self.compare(x, val) == -1)
+        else:
+            result, _ = self.lower_bound(self.head, self.__end(), lambda x: self.compare(x, val) == +1)
+        return result if result != self.__end() and result.value.elem == val else None
 
     def delete(self, val):
         found = self.find(val)
@@ -151,7 +151,7 @@ class OrderedList:
             start, end = end, start
 
         while start != end:
-            mid = self.__get_mid_node(start, end)
+            mid, _ = self.__get_mid_node(start, end)
             if mid.value.elem == value:
                 return mid.value.index
             if value < mid.value.elem:
@@ -209,8 +209,8 @@ class OrderedList:
 
     def __get_insert_place(self, value) -> (Node | None, int):
         if self.__ascending:
-            return self.__find_if(self.head, self.__end(), lambda x: self.compare(value, x.elem) == -1)
-        return self.__find_if(self.head, self.__end(), lambda x: self.compare(value, x.elem) == +1)
+            return self.lower_bound(self.head, self.__end(), lambda x: self.compare(x, value) == -1)
+        return self.lower_bound(self.head, self.__end(), lambda x: self.compare(x, value) == +1)
 
     def __delete(self, node: Node):
         if node is not None:
@@ -248,17 +248,40 @@ class OrderedList:
             node = node.next
             idx += 1
 
-    def __get_mid_node(self, first: Node | None, last: Node | None) -> Node | None:
+    def __get_mid_node(self, first: Node | None, last: Node | None) -> (Node | None, int):
         if self.empty():
-            return None
+            return None, 0
         if first == last:
-            return first
+            return first, 0
         cnt = 0
-        size = last.value.index - first.value.index
+        size = self.distance(first, last)
         while first != last and cnt < size // 2:
             cnt += 1
             first = first.next
-        return first
+        return first, cnt
+
+    def lower_bound(self, first: Node | None, last: Node | None, predicate):
+        if self.empty():
+            return self.head, 0
+
+        distance: int = self.distance(first, last)
+        while distance > 0:
+            mid, cnt = self.__get_mid_node(first, last)
+            if predicate(mid.value.elem):
+                first = mid.next
+                distance -= cnt + 1
+            else:
+                distance = cnt
+                last = mid.prev
+
+        return first, self.distance(self.head, first)
+
+    def distance(self, first: Node | None, last: Node | None):
+        if first == last:
+            return 0
+        if last is None:
+            return self.tail.value.index - first.value.index + 1
+        return last.value.index - first.value.index
 
     @staticmethod
     def make(asc: bool, *args):
