@@ -19,6 +19,7 @@ class TestPutMethod(unittest.TestCase):
 
         dt.put("1", 2)
         self.assertEqual(dt.get("1"), 2)
+        self.assertNotEqual(dt.get("1"), 1)
         self.assertTrue(dt.is_key("1"))
         self.assertFalse(dt.is_key("2"))
 
