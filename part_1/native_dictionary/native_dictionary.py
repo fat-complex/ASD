@@ -16,8 +16,7 @@ class NativeDictionary:
         is_inserted = self.__insert(key, value, idx)
         if is_inserted is False:
             idx = self.__find_insert_pace(key, self.slots)
-            if idx is not None:
-                self.__insert(key, value, idx)
+            self.__insert(key, value, idx)
 
 
     def get(self, key):
