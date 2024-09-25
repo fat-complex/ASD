@@ -30,6 +30,8 @@ class TestPutMethod(unittest.TestCase):
             self.assertEqual(dt.get(str(i)), i)
             self.assertTrue(dt.is_key(str(i)))
 
+        self.assertEqual(dt.get("sdfdfg"), None)
+
         dt.put(str(dt.size + 1), 333)
         self.assertFalse(dt.is_key(str(dt.size + 1)))
 
