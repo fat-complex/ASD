@@ -1,7 +1,3 @@
-from typing import Any, TypeVar
-
-PowerSet = TypeVar("PowerSet")
-
 class PowerSet:
 
     def __init__(self) -> None:
