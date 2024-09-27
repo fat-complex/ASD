@@ -108,4 +108,3 @@ class PowerSet:
         for el in source_list:
             ps.put(el)
         return ps
-
