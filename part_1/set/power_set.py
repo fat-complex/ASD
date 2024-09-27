@@ -53,8 +53,6 @@ class PowerSet:
         self.__copy(set2, idx_2, set2.size(), set_union)
         return set_union
 
-
-
     def difference(self, set2: PowerSet) -> PowerSet:
         idx_1 = 0
         idx_2 = 0
@@ -73,12 +71,16 @@ class PowerSet:
         return set_difference
 
     def issubset(self, set2: PowerSet) -> bool:
-        return all(x in set2.storage for x in self.storage)
+        count = 0
+        for el in set2.storage:
+            if self.get(el):
+                count += 1
+        return count == self.size()
 
     def equals(self, set2: PowerSet) -> bool:
         return self.storage == set2.storage
 
-    def __lower_bound(self, first, last, value: Any):
+    def __lower_bound(self, first, last, value):
         distance = last - first
         start = 0
         while distance > 0:
@@ -92,10 +94,10 @@ class PowerSet:
                 distance = step
         return start
 
-    def __exists_value(self, idx: int, value: Any):
+    def __exists_value(self, idx: int, value):
         return idx != self.size() and self.storage[idx] == value
 
-    def __copy(self, source: PowerSet, first: int, last: int, dest: PowerSet):
+    def __copy(self, source, first: int, last: int, dest):
         while first != last:
             dest.put(source.storage[first])
             first += 1
