@@ -273,25 +273,59 @@ class TestSubsetMethod(unittest.TestCase):
         self.assertTrue(ps1.issubset(ps2))
         self.assertTrue(ps2.issubset(ps1))
 
-        ps1 = PowerSet.make([1, 2, 3])
+
+        target = [1, 2, 3]
+        ps1 = PowerSet.make(target)
         ps2 = PowerSet.make([])
-        self.assertFalse(ps1.issubset(ps2))
+        s1 = set(target)
+        s2 = set([])
+        self.assertFalse(ps1.issubset(ps2) and s1.issubset(s2))
 
+
+        target = [1, 2, 3]
         ps1 = PowerSet.make([])
-        ps2 = PowerSet.make([1, 2, 3])
-        self.assertTrue(ps1.issubset(ps2))
+        ps2 = PowerSet.make(target)
+        s1 = set([])
+        s2 = set(target)
+        self.assertTrue(ps1.issubset(ps2) and s1.issubset(s2))
 
+
+        target1 = [1, 2, 3, 4, 5]
+        target2 = [1, 2, 3]
         ps1 = PowerSet.make([1, 2, 3, 4, 5])
         ps2 = PowerSet.make([1, 2, 3])
-        self.assertFalse(ps1.issubset(ps2))
+        s1 = set(target1)
+        s2 = set(target2)
+        self.assertFalse(ps1.issubset(ps2) and s1.issubset(s2))
 
+        target1 = [1, 2, 3, 4, 5]
+        target2 = [1, 3, 5]
+        ps1 = PowerSet.make(target1)
+        ps2 = PowerSet.make(target2)
+        s1 = set(target1)
+        s2 = set(target2)
+        self.assertTrue(ps2.issubset(ps1) and s2.issubset(s1))
+
+        target1 = [1, 2, 3]
+        target2 = [1, 2, 3, 4, 5]
         ps1 = PowerSet.make([1, 2, 3])
         ps2 = PowerSet.make([1, 2, 3, 4, 5])
-        self.assertTrue(ps1.issubset(ps2))
+        s1 = set(target1)
+        s2 = set(target2)
+        self.assertTrue(ps1.issubset(ps2) and s1.issubset(s2))
 
-        ps1 = PowerSet.make([1, 2, 3])
+        target1 = [1, 2, 3]
+        target2 = [1, 2, 3]
+        ps1 = PowerSet.make(target1)
+        ps2 = PowerSet.make(target2)
+        s1 = set(target1)
+        s2 = set(target2)
+        self.assertTrue(ps1.issubset(ps2) and s1.issubset(s2))
+        self.assertTrue(ps2.issubset(ps1) and s2.issubset(s1))
+
+        ps1 = PowerSet.make([1, 2, 4])
         ps2 = PowerSet.make([1, 2, 3])
-        self.assertTrue(ps1.issubset(ps2))
+        self.assertFalse(ps1.issubset(ps2))
 
 
 if __name__ == '__main__':
