@@ -80,7 +80,7 @@ class PowerSet:
         #     if el in set2.storage:
         #         count += 1
         # return count == self.size()
-        return all(i in set2.storage for i in self.storage)
+        return all(i in self.storage for i in set2.storage)
 
     def equals(self, set2: PowerSet) -> bool:
         return self.storage == set2.storage

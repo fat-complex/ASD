@@ -24,6 +24,14 @@ class TestPutMethod(unittest.TestCase):
         self.assertFalse(ps.get(42))
         self.assertEqual(ps.storage, set_to_sorted_list(set(ps.storage)))
 
+        ps.put(2)
+        self.assertEqual(ps.size(), 2)
+        self.assertTrue(ps.get(1))
+        self.assertTrue(ps.get(2))
+        self.assertFalse(ps.get(42))
+        self.assertEqual(ps.storage, set_to_sorted_list(set(ps.storage)))
+        self.assertEqual(ps.size(), 2)
+
         target = [4, 1, 3, 2, 3, 4, 1]
         ps = PowerSet.make(target)
 
@@ -279,7 +287,7 @@ class TestSubsetMethod(unittest.TestCase):
         ps2 = PowerSet.make([])
         s1 = set(target)
         s2 = set([])
-        self.assertFalse(ps1.issubset(ps2) and s1.issubset(s2))
+        self.assertTrue(ps1.issubset(ps2) and s2 <= s1)
 
 
         target = [1, 2, 3]
@@ -287,7 +295,7 @@ class TestSubsetMethod(unittest.TestCase):
         ps2 = PowerSet.make(target)
         s1 = set([])
         s2 = set(target)
-        self.assertTrue(ps1.issubset(ps2) and s1.issubset(s2))
+        self.assertFalse(ps1.issubset(ps2) and not s2 <= s1)
 
 
         target1 = [1, 2, 3, 4, 5]
@@ -296,7 +304,7 @@ class TestSubsetMethod(unittest.TestCase):
         ps2 = PowerSet.make([1, 2, 3])
         s1 = set(target1)
         s2 = set(target2)
-        self.assertFalse(ps1.issubset(ps2) and s1.issubset(s2))
+        self.assertTrue(ps1.issubset(ps2) and s2 <= s1)
 
         target1 = [1, 2, 3, 4, 5]
         target2 = [1, 3, 5]
@@ -304,7 +312,7 @@ class TestSubsetMethod(unittest.TestCase):
         ps2 = PowerSet.make(target2)
         s1 = set(target1)
         s2 = set(target2)
-        self.assertTrue(ps2.issubset(ps1) and s2.issubset(s1))
+        self.assertTrue(ps1.issubset(ps2) and s2 <= s1)
 
         target1 = [1, 2, 3]
         target2 = [1, 2, 3, 4, 5]
@@ -312,7 +320,7 @@ class TestSubsetMethod(unittest.TestCase):
         ps2 = PowerSet.make([1, 2, 3, 4, 5])
         s1 = set(target1)
         s2 = set(target2)
-        self.assertTrue(ps1.issubset(ps2) and s1.issubset(s2))
+        self.assertFalse(ps1.issubset(ps2) and not s2 <= s1)
 
         target1 = [1, 2, 3]
         target2 = [1, 2, 3]
@@ -320,12 +328,12 @@ class TestSubsetMethod(unittest.TestCase):
         ps2 = PowerSet.make(target2)
         s1 = set(target1)
         s2 = set(target2)
-        self.assertTrue(ps1.issubset(ps2) and s1.issubset(s2))
-        self.assertTrue(ps2.issubset(ps1) and s2.issubset(s1))
+        self.assertTrue(ps1.issubset(ps2) and s1 <= s2)
+        self.assertTrue(ps2.issubset(ps1) and s2 <= s1)
 
         ps1 = PowerSet.make([1, 2, 4])
         ps2 = PowerSet.make([1, 2, 3])
-        self.assertFalse(ps1.issubset(ps2))
+        self.assertFalse(ps1.issubset(ps2) and not s1 <= s2 and not s2 <= s1)
 
 
 if __name__ == '__main__':
