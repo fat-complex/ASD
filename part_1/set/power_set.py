@@ -76,10 +76,11 @@ class PowerSet:
 
     def issubset(self, set2: PowerSet) -> bool:
         count = 0
-        for el in set2.storage:
-            if self.get(el):
+        for el in self.storage:
+            if el in set2.storage:
                 count += 1
         return count == self.size()
+        # return all(i in set2.storage for i in self.storage)
 
     def equals(self, set2: PowerSet) -> bool:
         return self.storage == set2.storage

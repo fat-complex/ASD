@@ -271,6 +271,7 @@ class TestSubsetMethod(unittest.TestCase):
         ps1 = PowerSet.make([])
         ps2 = PowerSet.make([])
         self.assertTrue(ps1.issubset(ps2))
+        self.assertTrue(ps2.issubset(ps1))
 
         ps1 = PowerSet.make([1, 2, 3])
         ps2 = PowerSet.make([])
