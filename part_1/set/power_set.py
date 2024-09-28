@@ -28,12 +28,13 @@ class PowerSet:
         idx_1 = 0
         idx_2 = 0
         intersect = PowerSet()
-        while idx_1 < self.size() and idx_2 < set2.size():
+        while idx_1 != self.size() and idx_2 != set2.size():
             if self.storage[idx_1] < set2.storage[idx_2]:
                 idx_1 += 1
             else:
                 if not set2.storage[idx_2] < self.storage[idx_1]:
                     intersect.put(self.storage[idx_1])
+                    idx_1 += 1
                 idx_2 += 1
         return intersect
 
@@ -41,12 +42,13 @@ class PowerSet:
         idx_1 = 0
         idx_2 = 0
         set_union = PowerSet.make([])
-        while idx_1 < self.size():
+        while idx_1 != self.size():
             if idx_2 == set2.size():
                 self.__copy(self, idx_1, self.size(), set_union)
                 break
             if set2.storage[idx_2] < self.storage[idx_1]:
                 set_union.put(set2.storage[idx_2])
+                idx_2 += 1
             else:
                 set_union.put(self.storage[idx_1])
                 if not self.storage[idx_1] < set2.storage[idx_2]:
