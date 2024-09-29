@@ -9,16 +9,16 @@ class PowerSet:
         return len(self.storage)
 
     def put(self, value: Any) -> None:
-        insert_place_idx = self.__lower_bound(0, self.size(), value)
+        insert_place_idx = self.lower_bound(0, self.size(), value)
         if not self.__exists_value(insert_place_idx, value):
             self.storage.insert(insert_place_idx, value)
 
     def get(self, value: Any) -> bool:
-        maybe_found_idx = self.__lower_bound(0, self.size(), value)
+        maybe_found_idx = self.lower_bound(0, self.size(), value)
         return self.__exists_value(maybe_found_idx, value)
 
     def remove(self, value: Any) -> bool:
-        maybe_found_idx = self.__lower_bound(0, self.size(), value)
+        maybe_found_idx = self.lower_bound(0, self.size(), value)
         if self.__exists_value(maybe_found_idx, value):
             self.storage.pop(maybe_found_idx)
             return True
@@ -88,19 +88,7 @@ class PowerSet:
             cartesian.put(tuple(cart))
         return cartesian
 
-    def __iter__(self):
-        return iter(self.storage)
-
-    def __cartesian_product(self, acc: [], lst: [], *args):
-        if len(args) == 0:
-            acc.append([i for i in lst])
-            return
-        for el in args[0]:
-            lst.append(el)
-            self.__cartesian_product(acc, lst, *args[1:])
-            lst.pop()
-
-    def __lower_bound(self, first, last, value):
+    def lower_bound(self, first, last, value):
         distance = last - first
         start = 0
         while distance > 0:
@@ -113,6 +101,18 @@ class PowerSet:
             else:
                 distance = step
         return start
+
+    def __iter__(self):
+        return iter(self.storage)
+
+    def __cartesian_product(self, acc: [], lst: [], *args):
+        if len(args) == 0:
+            acc.append([i for i in lst])
+            return
+        for el in args[0]:
+            lst.append(el)
+            self.__cartesian_product(acc, lst, *args[1:])
+            lst.pop()
 
     def __exists_value(self, idx: int, value):
         return idx != self.size() and self.storage[idx] == value
