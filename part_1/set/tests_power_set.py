@@ -336,5 +336,56 @@ class TestSubsetMethod(unittest.TestCase):
         self.assertFalse(ps1.issubset(ps2) and not s1 <= s2 and not s2 <= s1)
 
 
+import itertools
+class TestCartesianProductMethod(unittest.TestCase):
+    def test_cartesian_product(self):
+        target1 = [1]
+        target2 = []
+        ps1 = PowerSet.make(target1)
+        ps2 = PowerSet.make(target2)
+
+        cartesian = ps1.cartesian_product(ps2)
+        lists = [target1, target2]
+        expected = list(itertools.product(*lists))
+
+        self.assertEqual(cartesian.storage, expected)
+
+        target1 = [1]
+        target2 = [2]
+        ps1 = PowerSet.make(target1)
+        ps2 = PowerSet.make(target2)
+
+        cartesian = ps1.cartesian_product(ps2)
+        lists = [target1, target2]
+        expected = list(itertools.product(*lists))
+
+        self.assertEqual(cartesian.storage, expected)
+
+        target1 = [1, 2, 3]
+        target2 = ['a', 'b']
+        ps1 = PowerSet.make(target1)
+        ps2 = PowerSet.make(target2)
+
+        cartesian = ps1.cartesian_product(ps2)
+        lists = [target1, target2]
+        expected = list(itertools.product(*lists))
+
+        self.assertEqual(cartesian.storage, expected)
+
+
+        target1 = [1, 2, 3]
+        target2 = ['a', 'b']
+        target3 = [4, 5]
+        ps1 = PowerSet.make(target1)
+        ps2 = PowerSet.make(target2)
+        ps3 = PowerSet.make(target3)
+
+        cartesian = ps1.cartesian_product(ps2, ps3)
+        lists = [target1, target2, target3]
+        expected = list(itertools.product(*lists))
+
+        self.assertEqual(cartesian.storage, expected)
+
+
 if __name__ == '__main__':
     unittest.main()

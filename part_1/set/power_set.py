@@ -75,15 +75,30 @@ class PowerSet:
         return set_difference
 
     def issubset(self, set2: PowerSet) -> bool:
-        # count = 0
-        # for el in self.storage:
-        #     if el in set2.storage:
-        #         count += 1
-        # return count == self.size()
         return all(i in self.storage for i in set2.storage)
 
     def equals(self, set2: PowerSet) -> bool:
         return self.storage == set2.storage
+
+    def cartesian_product(self, *args):
+        cartesian = PowerSet.make([])
+        res = []
+        self.__cartesian_product(res, [], self.storage, *args)
+        for cart in res:
+            cartesian.put(tuple(cart))
+        return cartesian
+
+    def __iter__(self):
+        return iter(self.storage)
+
+    def __cartesian_product(self, acc: [], lst: [], *args):
+        if len(args) == 0:
+            acc.append([i for i in lst])
+            return
+        for el in args[0]:
+            lst.append(el)
+            self.__cartesian_product(acc, lst, *args[1:])
+            lst.pop()
 
     def __lower_bound(self, first, last, value):
         distance = last - first
