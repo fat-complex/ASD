@@ -41,5 +41,22 @@ class TestAddMethod(unittest.TestCase):
         self.assertEqual(bloom.is_value("sdfsdfsdfsdfs"), False)
 
 
+    def test_remove(self):
+        bloom = BloomFilter(32)
+
+        possible_keys = ["11111", "22222", "33333", "12345", "54321"]
+        added_keys = []
+        for key in possible_keys:
+            bloom.add(key)
+            if bloom.is_value(key):
+                added_keys.append(key)
+        self.assertEqual(possible_keys, added_keys)
+
+        for key in added_keys:
+            bloom.remove(key)
+            self.assertFalse(bloom.is_value(key))
+        self.assertEqual(bloom.bloom_filter, 0)
+
+
 if __name__ == '__main__':
     unittest.main()
